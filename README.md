@@ -1,182 +1,154 @@
-# Spam_Email_Classifier-Linear-Regression-Data-cleaning-EDA-Decision-Tree-classifier
-Spam Email Classifier · Linear Regression · Titanic EDA · Decision Tree (Drug)
+# Spam_Email_Classifier-Linear-Regression-Data-cleaning-EDA-Decision-Tree-classifier# ML-Low — Task 1 & Task 2 (Jupyter Notebooks)
 
-Task 1 — Three Coding Challenges (Machine Learning)
+Practical, no-nonsense ML mini-projects you can run locally in VS Code/Jupyter.  
+Covers **Linear Regression (Housing)**, **Titanic Data Cleaning & EDA**, **Decision Tree (Drug)**, and a **Spam Email Classifier (Naive Bayes)**.
 
-✅ Linear Regression on a housing dataset
-✅ Data Cleaning & EDA on Titanic dataset
-✅ Decision Tree classifier on Drug dataset
+---
 
-This repo contains three self-contained ML exercises implemented in Jupyter notebooks, plus a utility function SAFE_READ_CSV that makes running locally painless (no Google Colab dependence). Each challenge is written to be robust to dataset paths: just place the CSV next to the notebook or provide a full path when prompted.
-
-🔧 What’s Inside
+## 📁 Repository Contents
 
 ML-low/
-├─ Linear Regression-Data cleaning-EDA-Decision Tree classifier.ipynb   # Master notebook (all 3)
-├─ Spam_Email_Classifier_Patched.ipynb                                  # (extra work)
-├─ output.pdf                                                           # Exported report (example)
+├─ Linear Regression-Data cleaning-EDA-Decision Tree classifier.ipynb # Task 1: all 3 challenges in one notebook
+├─ Spam_Email_Classifier_Patched.ipynb # Task 2: spam vs ham classifier
+├─ output.pdf # Exported report (optional)
 ├─ README.md
-└─ data/                                                                # (optional) put CSVs here
+└─ data/ # (create this; place CSVs here)
+├─ Housing.csv
+├─ Titanic-Dataset.csv
+└─ drug200.csv
 
+markdown
+Copy code
 
-📦 Setup
+> You can keep datasets next to the notebooks **or** in `data/`.  
+> Both notebooks include a `SAFE_READ_CSV` utility that tries multiple default paths and, if needed, asks you for a manual path.
 
-Python 3.9+ recommended
+---
 
-Create/activate a venv and install deps:
+## 🧪 Task 1 — Three Coding Challenges (Single Notebook)
 
-python -m venv .venv
-# Windows PowerShell
-. .\.venv\Scripts\Activate.ps1
-# macOS/Linux
-# source .venv/bin/activate
+### 1) Linear Regression — Housing
+**Goal:** Predict house prices using `LinearRegression`.
 
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+- **Dataset:** `Housing.csv`  
+- **Pipeline:** load → select numeric features → train/test split → fit → evaluate (R², MAE) → quick scatter plot  
+- **Auto-target logic:** If the dataset contains a `price/medv` column (case-insensitive), that’s used; otherwise the **last numeric column** becomes the target.
 
+**Outputs:**
+- R², MAE
+- Coefficients per feature
+- Scatter: first numeric feature vs. actual/predicted target
 
-requirements.txt (use this if you don’t already have one):
+---
 
-pandas
-numpy
-matplotlib
-scikit-learn
-ipykernel
-jupyter
+### 2) Data Cleaning & EDA — Titanic
+**Goal:** Clean and inspect Titanic passenger data with Pandas.
 
+- **Dataset:** `Titanic-Dataset.csv`  
+- **Steps:** `.info()`, `.head()`, missing values, duplicates →  
+  - Impute `Age` with median  
+  - Impute `Embarked` with mode  
+  - Drop `Cabin` if present  
+  - Remove duplicates  
+- **Outputs:** Missing-value tables (before/after) + cleaned preview
 
-If you plan to export to PDF:
+---
 
-pip install nbconvert[webpdf]
+### 3) Decision Tree Classifier — Drug
+**Goal:** Predict prescribed drug class using a small clinical dataset.
 
+- **Dataset:** `drug200.csv`  
+- **Steps:** label-encode categoricals (except target `Drug`) → train/test split → `DecisionTreeClassifier(criterion='entropy', max_depth=4)` → accuracy → visualize tree  
+- **Outputs:** Test accuracy, plotted decision tree
 
-(You need a Chromium install; nbconvert will guide you.)
+---
 
-📁 Datasets (expected names)
+## ✉️ Task 2 — Spam Email Classifier (Naive Bayes)
 
-Put these files next to the notebook or in ./data/:
+**Goal:** Train a spam/ham classifier using **pre-vectorized** Kaggle dataset (word counts) and **NB** with **TF-IDF weighting**.
 
-Housing: Housing.csv (any standard housing dataset; the notebook will auto-detect target if named price or MEDV)
+- **Dataset (example):** Kaggle — *Email Spam Classification Dataset CSV*  
+  - URL: https://www.kaggle.com/datasets/balaka18/email-spam-classification-dataset-csv  
+  - The CSV has ~3000 count features (+ a label column).  
+- **Vectorization:** Since features are counts already, we use `TfidfTransformer` (not `TfidfVectorizer`).
+- **Models:** `MultinomialNB` and `ComplementNB` with `GridSearchCV` on `alpha`.
+- **Metrics:** accuracy, precision, recall, F1, confusion matrix; auto-selects best model.
 
-Titanic: Titanic-Dataset.csv (columns like Age, Embarked, Cabin, etc.)
+> If your dataset has only two columns (`text`, `label`), you can adapt the notebook to use `TfidfVectorizer` on raw text—this notebook assumes the Kaggle **count-feature** CSV.
 
-Drug: drug200.csv (UCI-style sample with Drug as target)
+---
 
-You can also provide any full file path when prompted — thanks to SAFE_READ_CSV.
+## 🧰 SAFE_READ_CSV Utility
 
-🛡️ Utility — SAFE_READ_CSV
+Both notebooks define:
 
-To avoid brittle paths, all loaders call:
-
+```python
 def SAFE_READ_CSV(preferred_paths, fallback_msg):
-    # Tries multiple locations; if not found, prompts for a full path.
+    # Tries a list of locations.
+    # If not found, prompts for a manual path (works outside Colab).
+Typical usage in the notebooks tries:
 
+local folder: filename.csv
 
-Tries known paths: ["/mnt/data/...","./...","data/..."]
+project subfolder: data/filename.csv
 
-If not found, prompts: paste a full path (e.g., C:\Users\...\data\Housing.csv)
+(and a Linux-ish path for hosted runners)
 
-Raises a clear error if still missing
+If not found, you’ll get a prompt:
 
-🚀 How to Run
+pgsql
+Copy code
+➡ Enter full path to your CSV (or press Enter to cancel):
+▶️ How to Run (VS Code / Jupyter)
+Create env & install deps
 
-Open the master notebook and run all cells:
+bash
+Copy code
+# Python 3.10+ recommended
+python -m venv .venv
+.venv\Scripts\activate         # Windows PowerShell
+pip install -U pip
+pip install jupyter pandas numpy scipy scikit-learn matplotlib
+Open notebook
 
-Linear Regression-Data cleaning-EDA-Decision Tree classifier.ipynb
+VS Code → Jupyter extension → open .ipynb and select your .venv kernel, or
 
+bash
+Copy code
+jupyter notebook
+# then open the .ipynb in the browser
+Place datasets
 
-Or run them section-by-section as you like.
+Put CSVs in data/ (recommended) or next to the notebook.
 
-Optional: export to PDF
+If the loader can’t find them, paste the full path when prompted.
 
-jupyter nbconvert --to webpdf "Linear Regression-Data cleaning-EDA-Decision Tree classifier.ipynb"
+📝 Expected Files & Where to Put Them
+data/Housing.csv
 
-📊 Challenge 1 — Linear Regression (Housing)
+data/Titanic-Dataset.csv
 
-Goal: Predict house prices using LinearRegression.
+data/drug200.csv
 
-Pipeline (already coded):
+(For Task 2) A Kaggle emails CSV (count-features): place as data/email_spam.csv (or provide path when prompted)
 
-Load Housing.csv via SAFE_READ_CSV.
+✅ Deliverables Check
+Task 1 (single notebook):
 
-Target detection: if a column equals price or MEDV (case-insensitive), use it. Otherwise, the last numeric column becomes the target.
+Prints metrics for Linear Regression (R², MAE)
 
-Features: all numeric columns except target.
+Shows Titanic cleaning before/after summaries
 
-Train/test split (test_size=0.2, random_state=42).
+Prints Decision Tree accuracy + renders tree
 
-Fit LinearRegression.
+Task 2:
 
-Metrics: R², MAE.
+Loads Kaggle CSV
 
-Plot: first numeric feature vs. target (Actual vs. Predicted).
+Runs TF-IDF transform on count features
 
-Outputs you’ll see:
+Tunes alpha for NB models via GridSearchCV
 
-Printed target column name
-
-R² and MAE in console
-
-Coefficients per feature
-
-A scatter plot comparing actual vs. predicted along the first feature
-
-💡 Tip: If your housing CSV includes non-numeric columns (like chas, rad codes as strings), convert them to numeric or drop them before training.
-
-🧼 Challenge 2 — Data Cleaning & EDA (Titanic)
-
-Goal: Clean Titanic-Dataset.csv and inspect structure.
-
-Steps implemented:
-
-df.info() and head() to understand schema
-
-Missing values + duplicate counts (before/after)
-
-Cleaning rules:
-
-Age → fill with median
-
-Embarked → fill with mode
-
-Drop Cabin if present (often sparse)
-
-Remove duplicates
-
-Show missing values after cleaning
-
-Preview cleaned frame
-
-📌 You can extend with:
-
-Survival rates by Sex, Pclass
-
-Binning Age groups
-
-Boxplots/histograms for quick visual EDA
-
-🌳 Challenge 3 — Decision Tree Classifier (Drug)
-
-Goal: Predict Drug using a shallow, interpretable decision tree.
-
-Steps implemented:
-
-Load drug200.csv via SAFE_READ_CSV
-
-Label-encode categorical features (excluding target Drug)
-
-Train/test split (0.2, random_state=42)
-
-Train DecisionTreeClassifier(criterion='entropy', max_depth=4, random_state=42)
-
-Evaluate accuracy
-
-Visualize the tree with plot_tree (feature names & class names shown)
-
-Outputs you’ll see:
-
-Printed test accuracy (e.g., Accuracy: 0.95xx)
-
-A rendered decision tree (depth-limited for readability)
+Prints best model + full classification report & confusion matrix
 
 🧪 Want more performance? Try GridSearchCV over max_depth, min_samples_split, min_samples_leaf.
