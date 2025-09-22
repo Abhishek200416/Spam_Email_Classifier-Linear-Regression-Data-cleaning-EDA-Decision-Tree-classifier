@@ -10,12 +10,14 @@ Task 1 — Three Coding Challenges (Machine Learning)
 This repo contains three self-contained ML exercises implemented in Jupyter notebooks, plus a utility function SAFE_READ_CSV that makes running locally painless (no Google Colab dependence). Each challenge is written to be robust to dataset paths: just place the CSV next to the notebook or provide a full path when prompted.
 
 🔧 What’s Inside
+
 ML-low/
 ├─ Linear Regression-Data cleaning-EDA-Decision Tree classifier.ipynb   # Master notebook (all 3)
 ├─ Spam_Email_Classifier_Patched.ipynb                                  # (extra work)
 ├─ output.pdf                                                           # Exported report (example)
 ├─ README.md
 └─ data/                                                                # (optional) put CSVs here
+
 
 📦 Setup
 
